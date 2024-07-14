@@ -8,11 +8,12 @@ Console.WriteLine("Logs from your program will appear here!");
 // Uncomment this block to pass the first stage
  TcpListener server = new TcpListener(IPAddress.Any, 4221);
  server.Start();
- server.AcceptSocket(); // wait for client
+// AcceptSocket() will block untill a client is connected. 
+var socket = server.AcceptSocket();
 
-// AcceptSocket() will block untill a client is connected. Once a client has connected the print statement below will execute
+string clientMessage = "HTTP/1.1 200 OK\r\n\r\n";
+Byte[] sendBytes = Encoding.ASCII.GetBytes(clientMessage);
 
-Console.WriteLine("Client Connectected");
+socket.Send(sendBytes);
 
 // AcceptSocket returns a socket you can use to send and receive data
-server.AcceptSocket().Send(Encoding.UTF8.GetBytes("HTTP/1.1 200 OK\r\n\r\n"));
