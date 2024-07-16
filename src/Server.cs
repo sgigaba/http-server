@@ -56,6 +56,5 @@ switch(endpoint[1])
         statusLine = "404 Not Found";
         break;
 }
-
 socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {headerContentLength}\r\n\r\n{value}"));
 socket.Close();
