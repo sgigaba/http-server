@@ -30,7 +30,12 @@ if (responseLines != null)
 
     string requestTarget = requestLine.Split(' ')[1];
     var endpoint = requestTarget.Split('/');
-    var userAgent = headerLine.Split(':')[1];
+    var userAgent = "";
+    
+    if (headerLine != null)
+    {
+        userAgent = headerLine.Split(':')[1];
+    }
 
     string body="";
     string statusLine;
