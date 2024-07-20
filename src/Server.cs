@@ -41,7 +41,7 @@ while (true)
         }
 
         string body="";
-        string statusLine;
+        string statusLine ="";
         string headerContentType ="";
         int headerContentLength = 0;
         string finalResponse = "";
@@ -50,14 +50,10 @@ while (true)
         {
             case "":
                 statusLine = "200 OK";
-                try{
-                    body = endpoint[2];
-                    headerContentType = "text/plain";
-                    headerContentLength = body.Length;
-                }
-                catch(IndexOutOfRangeException){
-
-                }
+                body = "testing";
+                headerContentType = "text/plain";
+                headerContentLength = body.Length;
+                finalResponse = BuildResponse(statusLine,headerContentLength,headerContentType,body);
                 break;
             case "echo":
                 statusLine = "200 OK";
@@ -80,7 +76,9 @@ while (true)
                 statusLine = "404 Not Found";
                 break;
         }
-        socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {headerContentLength}\r\n\r\n{body}"));
+        Console.WriteLine(finalResponse);
+        //socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {headerContentLength}\r\n\r\n{body}"));
+        socket.Send(Encoding.ASCII.GetBytes(finalResponse));
         socket.Close();
         //socket.Send(Encoding.ASCII.GetBytes(finalResponse));
     }
@@ -89,13 +87,11 @@ while (true)
 string BuildResponse(string statusLine, int headerContentLength, string? headerContentType, string? body)
 {
     var response = new StringBuilder();
-    response.Append($"HTTP/1.1 {statusLine}\r\n\r\n");
 
-    if (headerContentLength != 0){
-        response.Append($"Content-Type: {headerContentType}\r\n");
-        response.Append($"Content-Length: {headerContentLength}\r\n");
-        response.Append($"r\n{body}");
-    }
+    response.Append($"HTTP/1.1 {statusLine}\r\n");
+    response.Append($"Content-Type: {headerContentType}\r\n");
+    response.Append($"Content-Length: {headerContentLength}\r\n");
+    response.Append($"\r\n{body}");
 
     return response.ToString();
 }
