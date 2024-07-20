@@ -45,6 +45,7 @@ while (true)
         string headerContentType ="";
         int headerContentLength = 0;
         string finalResponse = "";
+        
 
         switch(endpoint[1])
         {
