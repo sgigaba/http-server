@@ -15,60 +15,63 @@ string clientMessage = "HTTP/1.1 200 OK\r\n\r\n";
 Byte[] sendBytes = Encoding.ASCII.GetBytes(clientMessage);
 
 // Receive request from client
-byte[] responseBytes = new byte[256];
-socket.Receive(responseBytes);
-
-string response = Encoding.ASCII.GetString(responseBytes);
-Console.WriteLine("" + response);
-
-string[] responseLines = response.Split('\n');
-
-if (responseLines != null)
+while (true)
 {
-    string requestLine = responseLines.FirstOrDefault(_ => _.Contains("HTTP"));
-    string headerLine = responseLines.FirstOrDefault(_ => _.Contains("User-Agent"));
+    byte[] responseBytes = new byte[256];
+    socket.Receive(responseBytes);
 
-    string requestTarget = requestLine.Split(' ')[1];
-    var endpoint = requestTarget.Split('/');
-    var userAgent = "";
-    
-    if (headerLine != null)
+    string response = Encoding.ASCII.GetString(responseBytes);
+    Console.WriteLine("" + response);
+
+    string[] responseLines = response.Split('\n');
+
+    if (responseLines != null)
     {
-        userAgent = headerLine.Split(':')[1];
-    }
+        string requestLine = responseLines.FirstOrDefault(_ => _.Contains("HTTP"));
+        Console.WriteLine("" + requestLine);
+        string headerLine = responseLines.FirstOrDefault(_ => _.Contains("User-Agent"));
 
-    string body="";
-    string statusLine;
-    string headerContentType ="";
-    int headerContentLength = 0;
+        string requestTarget = requestLine.Split(' ')[1];
+        var endpoint = requestTarget.Split('/');
+        var userAgent = "";
 
-    switch(endpoint[1])
-    {
-        case "":
-            statusLine = "200 OK";
-            break;
-        case "echo":
-            statusLine = "200 OK";
-            try{
-                body = endpoint[2];
+        if (headerLine != null)
+        {
+            userAgent = headerLine.Split(':')[1];
+        }
+
+        string body="";
+        string statusLine;
+        string headerContentType ="";
+        int headerContentLength = 0;
+
+        switch(endpoint[1])
+        {
+            case "":
+                statusLine = "200 OK";
+                break;
+            case "echo":
+                statusLine = "200 OK";
+                try{
+                    body = endpoint[2];
+                    headerContentType = "text/plain";
+                    headerContentLength = body.Length;
+                }
+                catch(IndexOutOfRangeException){
+
+                }
+                break;
+            case "user-agent":
+                statusLine = "200 OK";
                 headerContentType = "text/plain";
+                body = userAgent.Trim();
                 headerContentLength = body.Length;
-            }
-            catch(IndexOutOfRangeException){
+                break;
+            default:
+                statusLine = "404 Not Found";
+                break;
+        }
 
-            }
-            break;
-        case "user-agent":
-            statusLine = "200 OK";
-            headerContentType = "text/plain";
-            body = userAgent.Trim();
-            headerContentLength = body.Length;
-            break;
-        default:
-            statusLine = "404 Not Found";
-            break;
+        socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {headerContentLength}\r\n\r\n{body}"));
     }
-
-    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {headerContentLength}\r\n\r\n{body}"));
 }
-socket.Close();
