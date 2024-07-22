@@ -45,7 +45,7 @@ while (true)
         string headerContentType ="";
         int headerContentLength = 0;
         string finalResponse = "";
-        
+
 
         switch(endpoint[1])
         {
@@ -81,7 +81,6 @@ while (true)
         //socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {headerContentLength}\r\n\r\n{body}"));
         socket.Send(Encoding.ASCII.GetBytes(finalResponse));
         socket.Close();
-        //socket.Send(Encoding.ASCII.GetBytes(finalResponse));
     }
 }
 
