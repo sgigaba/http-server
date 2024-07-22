@@ -11,15 +11,15 @@ Console.WriteLine("Logs from your program will appear here!");
 // AcceptSocket() will block untill a client is connected. AcceptSocket returns a socket you can use to send and receive data
 
 Socket socket; 
-//string clientMessage = "HTTP/1.1 200 OK\r\n\r\n";
-//Byte[] sendBytes = Encoding.ASCII.GetBytes(clientMessage);
 
-//socket.Send(sendBytes);
-//socket.Close();
 // Receive request from client
 while (true)
 {
+    string clientMessage = "HTTP/1.1 ";
     socket = server.AcceptSocket();
+    Byte[] sendBytes = Encoding.ASCII.GetBytes(clientMessage);
+    socket.Send(sendBytes);
+    
     byte[] responseBytes = new byte[256];
     socket.Receive(responseBytes);
 
@@ -48,7 +48,6 @@ while (true)
         string headerContentType ="";
         int headerContentLength = 0;
         string finalResponse = "";
-
 
         switch(endpoint[1])
         {
@@ -94,7 +93,7 @@ string BuildResponse(string statusLine, int headerContentLength, string? headerC
 {
     var response = new StringBuilder();
 
-    response.Append($"HTTP/1.1 {statusLine}\r\n");
+    response.Append($"{statusLine}\r\n");
     response.Append($"Content-Type: {headerContentType}\r\n");
     response.Append($"Content-Length: {headerContentLength}\r\n");
     response.Append($"\r\n{body}");
