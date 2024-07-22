@@ -65,6 +65,7 @@ while (true)
                     body = endpoint[2];
                     headerContentType = "text/plain";
                     headerContentLength = body.Length;
+                    finalResponse = BuildResponse(statusLine,headerContentLength,headerContentType,body);
                 }
                 catch(IndexOutOfRangeException){
 
@@ -75,9 +76,11 @@ while (true)
                 headerContentType = "text/plain";
                 body = userAgent.Trim();
                 headerContentLength = body.Length;
+                finalResponse = BuildResponse(statusLine,headerContentLength,headerContentType,body);
                 break;
             default:
                 statusLine = "404 Not Found";
+                finalResponse = BuildResponse(statusLine,headerContentLength,headerContentType,body);
                 break;
         }
         Console.WriteLine(finalResponse);
