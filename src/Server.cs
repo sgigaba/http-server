@@ -10,13 +10,16 @@ Console.WriteLine("Logs from your program will appear here!");
  server.Start();
 // AcceptSocket() will block untill a client is connected. AcceptSocket returns a socket you can use to send and receive data
 
-//string clientMessage = "HTTP/1.1 200 OK\r\n\r\n";
-//Byte[] sendBytes = Encoding.ASCII.GetBytes(clientMessage);
+var socket = server.AcceptSocket();
+string clientMessage = "HTTP/1.1 200 OK\r\n\r\n";
+Byte[] sendBytes = Encoding.ASCII.GetBytes(clientMessage);
 
+socket.Send(sendBytes);
+socket.Close();
 // Receive request from client
 while (true)
 {
-    var socket = server.AcceptSocket();
+    socket = server.AcceptSocket();
     byte[] responseBytes = new byte[256];
     socket.Receive(responseBytes);
 
