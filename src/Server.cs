@@ -96,7 +96,7 @@ void SendStatusLine(string endpoint)
             statusLine = "404 Not Found";
             break;
     }
-    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\n"));
+    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\n\r\n"));
 }
 
 void SendResponse(int headerContentLength, string? headerContentType, string? body)
