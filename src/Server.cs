@@ -9,26 +9,26 @@ Console.WriteLine("Logs from your program will appear here!");
  TcpListener server = new TcpListener(IPAddress.Any, 4221);
  server.Start();
 
-Socket socket; 
-
-// Receive request from client
 while (true)
 {
-    // AcceptSocket() will block untill a client is connected. AcceptSocket returns a socket you can use to send and receive data
-    socket = server.AcceptSocket();
-    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 200 OK\r\n\r\n"));
-    
+    Socket socket = server.AcceptSocket();
+    Task.Run(() => ParseRequestAndSendResponse(socket));
+}
+
+Task ParseRequestAndSendResponse(Socket socket)
+{
     byte[] responseBytes = new byte[256];
     socket.Receive(responseBytes);
-    string response = Encoding.ASCII.GetString(responseBytes);
-    Console.WriteLine("" + response);
 
+    string response = Encoding.ASCII.GetString(responseBytes);
+    Console.WriteLine(response);
     string[] responseLines = response.Split('\n');
     string requestLine = responseLines.FirstOrDefault(_ => _.Contains("HTTP"));
     string requestTarget = requestLine.Split(' ')[1];
     var endpoint = requestTarget.Split('/');
     
-    SendStatusLine(endpoint[1]);
+    SendStatusLine(endpoint[1], socket);
+
     if (responseLines != null)
     {
         string headerLine = responseLines.FirstOrDefault(_ => _.Contains("User-Agent"));
@@ -50,36 +50,37 @@ while (true)
                 body = "testing";
                 headerContentType = "text/plain";
                 headerContentLength = body.Length;
-                SendResponse(headerContentLength,headerContentType,body);
+                SendResponse(headerContentLength,headerContentType,body, socket);
                 break;
             case "echo":
                 try{
                     body = endpoint[2];
                     headerContentType = "text/plain";
                     headerContentLength = body.Length;
-                    SendResponse(headerContentLength,headerContentType,body);
+                    SendResponse(headerContentLength,headerContentType,body, socket);
                 }
                 catch(IndexOutOfRangeException){
 
                 }
                 break;
             case "user-agent":
+                Console.WriteLine("here");
                 headerContentType = "text/plain";
                 body = userAgent.Trim();
                 headerContentLength = body.Length;
-                SendResponse(headerContentLength,headerContentType,body);
+                SendResponse(headerContentLength,headerContentType,body, socket);
                 break;
             default:
-                SendResponse(headerContentLength,headerContentType,body);
+                SendResponse(headerContentLength,headerContentType,body, socket);
                 break;
         }
         Console.WriteLine(finalResponse);
-        //socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {headerContentLength}\r\n\r\n{body}"));
-        socket.Close();
     }
+ 
+    return Task.CompletedTask;
 }
 
-void SendStatusLine(string endpoint)
+void SendStatusLine(string endpoint, Socket socket)
 {
     string statusLine = "";
     switch(endpoint)
@@ -100,7 +101,7 @@ void SendStatusLine(string endpoint)
     socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\n"));
 }
 
-void SendResponse(int headerContentLength, string? headerContentType, string? body)
+void SendResponse(int headerContentLength, string? headerContentType, string? body, Socket socket)
 {
     var response = new StringBuilder();
 
