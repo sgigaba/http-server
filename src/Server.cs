@@ -16,13 +16,13 @@ while (true)
 {
     // AcceptSocket() will block untill a client is connected. AcceptSocket returns a socket you can use to send and receive data
     socket = server.AcceptSocket();
+    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 200 OK\r\n\r\n"));
     
     byte[] responseBytes = new byte[256];
     socket.Receive(responseBytes);
     string response = Encoding.ASCII.GetString(responseBytes);
     Console.WriteLine("" + response);
 
-    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 200 OK\r\n\r\n"));
     string[] responseLines = response.Split('\n');
     string requestLine = responseLines.FirstOrDefault(_ => _.Contains("HTTP"));
     string requestTarget = requestLine.Split(' ')[1];
