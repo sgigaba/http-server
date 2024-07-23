@@ -22,7 +22,7 @@ while (true)
     string response = Encoding.ASCII.GetString(responseBytes);
     Console.WriteLine("" + response);
 
-    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 200 OK\r\n"));
+    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 200 OK\r\n\r\n"));
     string[] responseLines = response.Split('\n');
     string requestLine = responseLines.FirstOrDefault(_ => _.Contains("HTTP"));
     string requestTarget = requestLine.Split(' ')[1];
