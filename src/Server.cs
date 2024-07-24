@@ -15,8 +15,6 @@ while (true)
     Task.Run(() => ParseRequestAndSendResponse(socket));
 }
 
-
-
 Task ParseRequestAndSendResponse(Socket socket)
 {
     byte[] responseBytes = new byte[256];
@@ -56,6 +54,7 @@ Task ParseRequestAndSendResponse(Socket socket)
             case "files":
                 try{
                     var filePath = GetFilePath();
+                    Console.WriteLine(filePath);
                     var body = ReadFile(filePath,endpoint[2], socket);
                 }
                 catch (FileNotFoundException) 
