@@ -111,6 +111,8 @@ string GetFilePath()
         Console.WriteLine(arg);
         flags += arg;
     }
+
+    Console.WriteLine(args[2]);
     
     return flags.Split('/')[1];
 }
