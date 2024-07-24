@@ -108,6 +108,7 @@ string GetFilePath()
     string flags = "";
     foreach(var arg in args)
     {
+        Console.WriteLine(arg);
         flags += arg;
     }
     
