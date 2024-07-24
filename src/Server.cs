@@ -91,7 +91,7 @@ string? ReadFile(string dir, string file, Socket socket)
     string line ="";
     StreamReader sr;
     try{
-        sr = new StreamReader($"C:\\{dir}\\{file}");
+        sr = new StreamReader($"/{dir}/{file}");
         line = sr.ReadToEnd();
         sr.Close();
 
