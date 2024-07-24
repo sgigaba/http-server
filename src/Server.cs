@@ -15,20 +15,19 @@ while (true)
     Task.Run(() => ParseRequestAndSendResponse(socket));
 }
 
+
+
 Task ParseRequestAndSendResponse(Socket socket)
 {
     byte[] responseBytes = new byte[256];
     socket.Receive(responseBytes);
 
     string response = Encoding.ASCII.GetString(responseBytes);
-    Console.WriteLine(response);
     string[] responseLines = response.Split('\n');
     string requestLine = responseLines.FirstOrDefault(_ => _.Contains("HTTP"));
     string requestTarget = requestLine.Split(' ')[1];
     var endpoint = requestTarget.Split('/');
     
-    SendStatusLine(endpoint[1], socket);
-
     if (responseLines != null)
     {
         string headerLine = responseLines.FirstOrDefault(_ => _.Contains("User-Agent"));
@@ -38,77 +37,80 @@ Task ParseRequestAndSendResponse(Socket socket)
         {
             userAgent = headerLine.Split(':')[1];
         }
-
-        string body="";
-        string headerContentType ="";
-        int headerContentLength = 0;
-        string finalResponse = "";
-
         switch(endpoint[1])
         {
             case "":
-                body = "testing";
-                headerContentType = "text/plain";
-                headerContentLength = body.Length;
-                SendResponse(headerContentLength,headerContentType,body, socket);
+                SendResponse("200 OK","text/plain","testing", socket);
                 break;
             case "echo":
                 try{
-                    body = endpoint[2];
-                    headerContentType = "text/plain";
-                    headerContentLength = body.Length;
-                    SendResponse(headerContentLength,headerContentType,body, socket);
+                    SendResponse("200 OK","text/plain",endpoint[2], socket);
                 }
                 catch(IndexOutOfRangeException){
-
+                    SendResponse("200 OK","text/plain","", socket);
                 }
                 break;
             case "user-agent":
-                Console.WriteLine("here");
-                headerContentType = "text/plain";
-                body = userAgent.Trim();
-                headerContentLength = body.Length;
-                SendResponse(headerContentLength,headerContentType,body, socket);
+                SendResponse("200 OK","text/plain",userAgent.Trim(), socket);
+                break;
+            case "files":
+                try{
+                    var filePath = GetFilePath();
+                    var body = ReadFile(filePath,endpoint[2], socket);
+                }
+                catch (FileNotFoundException) 
+                {
+                    Console.WriteLine("File Not Found");
+                }
+                SendResponse("200 OK","application/octet-stream", "", socket);                                                 
                 break;
             default:
-                SendResponse(headerContentLength,headerContentType,body, socket);
+                SendResponse("404 Not Found","", "", socket);
                 break;
         }
-        Console.WriteLine(finalResponse);
     }
  
     return Task.CompletedTask;
 }
 
-void SendStatusLine(string endpoint, Socket socket)
-{
-    string statusLine = "";
-    switch(endpoint)
-    {
-        case "":
-            statusLine = "200 OK";
-            break;
-        case "echo":
-            statusLine = "200 OK";
-            break;
-        case "user-agent":
-            statusLine = "200 OK";
-            break;
-        default:
-            statusLine = "404 Not Found";
-            break;
-    }
-    socket.Send(Encoding.ASCII.GetBytes($"HTTP/1.1 {statusLine}\r\n"));
-}
-
-void SendResponse(int headerContentLength, string? headerContentType, string? body, Socket socket)
+void SendResponse(string statusLine,string? headerContentType, string? body, Socket socket)
 {
     var response = new StringBuilder();
 
+    response.Append($"HTTP/1.1 {statusLine}\r\n");
     response.Append($"Content-Type: {headerContentType}\r\n");
-    response.Append($"Content-Length: {headerContentLength}\r\n");
+    response.Append($"Content-Length: {body?.Length}\r\n");
     response.Append($"\r\n{body}");
 
     socket.Send(Encoding.ASCII.GetBytes(response.ToString()));
     socket.Close();
+}
+
+string? ReadFile(string dir, string file, Socket socket)
+{
+    string line ="";
+    StreamReader sr;
+    try{
+        sr = new StreamReader($"C:\\{dir}\\{file}");
+        line = sr.ReadToEnd();
+        sr.Close();
+
+        return line;
+    }
+    catch{
+        socket.Send(Encoding.ASCII.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
+        socket.Close();
+        throw new FileNotFoundException(); 
+    }
+}
+
+string GetFilePath()
+{
+    string flags = "";
+    foreach(var arg in args)
+    {
+        flags += arg;
+    }
+    
+    return flags.Split('/')[1];
 }
