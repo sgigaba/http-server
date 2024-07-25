@@ -88,6 +88,7 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
 string? ReadFile(string dir, string file, Socket socket)
 {
     string line ="";
+    Console.WriteLine("Here2");
     if (File.Exists(dir+file))
     {
         Console.WriteLine("File Found");
