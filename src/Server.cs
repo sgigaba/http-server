@@ -54,12 +54,12 @@ Task ParseRequestAndSendResponse(Socket socket)
             case "files":
                 try{
                     var body = ReadFile(args[2],endpoint[2], socket);
+                    SendResponse("200 OK","application/octet-stream", body, socket);                                                 
                 }
                 catch (FileNotFoundException) 
                 {
                     Console.WriteLine("File Not Found");
                 }
-                SendResponse("200 OK","application/octet-stream", "", socket);                                                 
                 break;
             default:
                 SendResponse("404 Not Found","", "", socket);
