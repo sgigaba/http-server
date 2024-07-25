@@ -54,6 +54,7 @@ Task ParseRequestAndSendResponse(Socket socket)
             case "files":
                 Console.WriteLine("Here");
                 try{
+                    Console.WriteLine("Here2");
                     var body = ReadFile(args[2],endpoint[2], socket);
                     Console.WriteLine(body);
                     SendResponse("200 OK","application/octet-stream", body, socket);                                                 
@@ -88,7 +89,7 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
 string? ReadFile(string dir, string file, Socket socket)
 {
     string line ="";
-    Console.WriteLine("Here2");
+    Console.WriteLine("Here3");
     if (File.Exists(dir+file))
     {
         Console.WriteLine("File Found");
