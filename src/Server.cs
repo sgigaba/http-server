@@ -55,9 +55,15 @@ Task ParseRequestAndSendResponse(Socket socket)
                 Console.WriteLine("Here");
                 try{
                     Console.WriteLine("Here2");
-                    var body = ReadFile(args[2],endpoint[2], socket);
-                    Console.WriteLine(body);
-                    SendResponse("200 OK","application/octet-stream", body, socket);                                                 
+                    if (File.Exists(args[2] + endpoint[2]))
+                    {
+                        var body = File.ReadAllText(args[2]+endpoint[2]);
+                        SendResponse("200 OK","application/octet-stream", body, socket);                                                 
+                    }
+                    else{
+                        socket.Send(Encoding.ASCII.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
+                        socket.Close();
+                    }
                 }
                 catch (FileNotFoundException) 
                 {
@@ -84,20 +90,4 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
 
     socket.Send(Encoding.ASCII.GetBytes(response.ToString()));
     socket.Close();
-}
-
-string? ReadFile(string dir, string file, Socket socket)
-{
-    string line ="";
-    Console.WriteLine("Here3");
-    if (File.Exists(dir+file))
-    {
-        Console.WriteLine("File Found");
-        line = File.ReadAllText(dir+file);
-        Console.WriteLine(line);
-        return line;
-    }
-    socket.Send(Encoding.ASCII.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
-    socket.Close();
-    throw new FileNotFoundException(); 
 }
