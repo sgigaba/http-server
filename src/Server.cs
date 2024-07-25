@@ -90,7 +90,9 @@ string? ReadFile(string dir, string file, Socket socket)
     string line ="";
     if (File.Exists(dir+file))
     {
+        Console.WriteLine("File Found");
         line = File.ReadAllText(dir+file);
+        Console.WriteLine(line);
         return line;
     }
     socket.Send(Encoding.ASCII.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
