@@ -55,6 +55,7 @@ Task ParseRequestAndSendResponse(Socket socket)
                 Console.WriteLine("Here");
                 try{
                     Console.WriteLine("Here2");
+                    Console.WriteLine(args[2] + endpoint[2]);
                     if (File.Exists(args[2] + endpoint[2]))
                     {
                         var body = File.ReadAllText(args[2]+endpoint[2]);
