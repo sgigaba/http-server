@@ -53,9 +53,7 @@ Task ParseRequestAndSendResponse(Socket socket)
                 break;
             case "files":
                 try{
-                    var filePath = GetFilePath();
-                    Console.WriteLine(filePath);
-                    var body = ReadFile(filePath,endpoint[2], socket);
+                    var body = ReadFile(args[2],endpoint[2], socket);
                 }
                 catch (FileNotFoundException) 
                 {
@@ -88,31 +86,12 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
 string? ReadFile(string dir, string file, Socket socket)
 {
     string line ="";
-    StreamReader sr;
-    try{
-        sr = new StreamReader($"/{dir}/{file}");
-        line = sr.ReadToEnd();
-        sr.Close();
-
+    if (File.Exists(dir+file))
+    {
+        line = File.ReadAllText(dir+file);
         return line;
     }
-    catch{
-        socket.Send(Encoding.ASCII.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
-        socket.Close();
-        throw new FileNotFoundException(); 
-    }
-}
-
-string GetFilePath()
-{
-    string flags = "";
-    foreach(var arg in args)
-    {
-        Console.WriteLine(arg);
-        flags += arg;
-    }
-
-    Console.WriteLine(args[2]);
-    
-    return flags.Split('/')[1];
+    socket.Send(Encoding.ASCII.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
+    socket.Close();
+    throw new FileNotFoundException(); 
 }
