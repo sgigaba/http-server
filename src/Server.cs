@@ -52,8 +52,10 @@ Task ParseRequestAndSendResponse(Socket socket)
                 SendResponse("200 OK","text/plain",userAgent.Trim(), socket);
                 break;
             case "files":
+                Console.WriteLine("Here");
                 try{
                     var body = ReadFile(args[2],endpoint[2], socket);
+                    Console.WriteLine(body);
                     SendResponse("200 OK","application/octet-stream", body, socket);                                                 
                 }
                 catch (FileNotFoundException) 
