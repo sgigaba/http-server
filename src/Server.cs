@@ -79,7 +79,8 @@ Task ParseRequestAndSendResponse(Socket socket)
 
                     case "POST":
                         var newFile = endpoint[2].Split(' ')[0];
-                        var data = responseLines.Last();
+                        var data = responseLines.Last().Trim();
+                        Console.WriteLine(data);
                         using (StreamWriter sw = File.CreateText(arg[2] + newFile)){
                             sw.WriteLine(data.Trim());
                         }
