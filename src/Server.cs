@@ -81,7 +81,7 @@ Task ParseRequestAndSendResponse(Socket socket)
                         var newFile = endpoint[2].Split(' ')[0];
                         var data = responseLines.Last();
                         using (StreamWriter sw = File.CreateText(arg[2] + newFile)){
-                            sw.WriteLine(data);
+                            sw.WriteLine(data.Trim());
                         }
                         SendResponse("201 Created","","" , socket);                                                 
                         socket.Close();
