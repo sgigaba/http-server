@@ -83,7 +83,7 @@ Task ParseRequestAndSendResponse(Socket socket)
                         string contentLength = responseLines.FirstOrDefault(_ => _.Contains("Content-Length")).Split(":")[1].Trim();
                         int finalLength = 0;
                         Int32.TryParse(contentLength, out finalLength);
-                        var data = responseLines.Last().Substring(0, finalLength);
+                        var data = responseLines.Last().Substring(0, finalLength - 1);
                         Console.WriteLine(data);
                         using (StreamWriter sw = File.CreateText(arg[2] + newFile)){
                             sw.WriteLine(data.Trim());
