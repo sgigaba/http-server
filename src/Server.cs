@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -79,7 +80,10 @@ Task ParseRequestAndSendResponse(Socket socket)
 
                     case "POST":
                         var newFile = endpoint[2].Split(' ')[0];
-                        var data = responseLines.Last().Trim();
+                        string contentLength = responseLines.FirstOrDefault(_ => _.Contains("Content-Length")).Split(":")[1].Trim();
+                        int finalLength = 0;
+                        Int32.TryParse(contentLength, out finalLength);
+                        var data = responseLines.Last().Substring(0, finalLength);
                         Console.WriteLine(data);
                         using (StreamWriter sw = File.CreateText(arg[2] + newFile)){
                             sw.WriteLine(data.Trim());
