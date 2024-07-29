@@ -44,18 +44,19 @@ Task ParseRequestAndSendResponse(Socket socket)
         switch(endpoint[1])
         {
             case "":
-                SendResponse("200 OK","text/plain","testing", socket);
+                SendResponse("200 OK","text/plain","testing", socket, null);
                 break;
             case "echo":
                 try{
-                    SendResponse("200 OK","text/plain",endpoint[2], socket);
+                    var encoding = responseLines.FirstOrDefault(_ => _.Contains("Accept-Encoding"));
+                    SendResponse("200 OK","text/plain",endpoint[2], socket, encoding);
                 }
                 catch(IndexOutOfRangeException){
-                    SendResponse("200 OK","text/plain","", socket);
+                    SendResponse("200 OK","text/plain","", socket, null);
                 }
                 break;
             case "user-agent":
-                SendResponse("200 OK","text/plain",userAgent.Trim(), socket);
+                SendResponse("200 OK","text/plain",userAgent.Trim(), socket, null);
                 break;
             case "files":
                 switch(requestType)
@@ -65,7 +66,7 @@ Task ParseRequestAndSendResponse(Socket socket)
                             if (File.Exists(arg[2] + endpoint[2]))
                             {
                                 var body = File.ReadAllText(arg[2]+endpoint[2]);
-                                SendResponse("200 OK","application/octet-stream", body, socket);                                                 
+                                SendResponse("200 OK","application/octet-stream", body, socket, null);                                                 
                             }
                             else{
                                 socket.Send(Encoding.ASCII.GetBytes("HTTP/1.1 404 Not Found\r\n\r\n"));
@@ -88,13 +89,13 @@ Task ParseRequestAndSendResponse(Socket socket)
                         using (StreamWriter sw = File.CreateText(arg[2] + newFile)){
                             sw.Write(data);
                         }
-                        SendResponse("201 Created","","" , socket);                                                 
+                        SendResponse("201 Created","","" , socket, null);                                                 
                         socket.Close();
                     break;                                       
                 }
                 break;
             default:
-                SendResponse("404 Not Found","", "", socket);
+                SendResponse("404 Not Found","", "", socket, null);
                 break;
         }
     }
@@ -102,11 +103,17 @@ Task ParseRequestAndSendResponse(Socket socket)
     return Task.CompletedTask;
 }
 
-void SendResponse(string statusLine,string? headerContentType, string? body, Socket socket)
+void SendResponse(string statusLine,string? headerContentType, string? body, Socket socket, string? encoding)
 {
     var response = new StringBuilder();
 
     response.Append($"HTTP/1.1 {statusLine}\r\n");
+
+    if (encoding != null && encoding.Contains("gzip"))
+    {
+        response.Append("Content-Encoding: gzip\r\n");
+    }
+
     response.Append($"Content-Type: {headerContentType}\r\n");
     response.Append($"Content-Length: {body?.Length}\r\n");
     response.Append($"\r\n{body}");
