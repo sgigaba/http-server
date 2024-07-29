@@ -108,8 +108,10 @@ Task ParseRequestAndSendResponse(Socket socket)
 void SendResponse(string statusLine,string? headerContentType, string? body, Socket socket, string? encoding)
 {
     var response = new StringBuilder();
+    byte[] compressedBody = null;
 
     response.Append($"HTTP/1.1 {statusLine}\r\n");
+
 
     if (encoding != null && encoding.Contains("gzip"))
     {
@@ -118,7 +120,8 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
             using (var gzipStream = new GZipStream(memoryStream, CompressionLevel.Optimal)){
                 gzipStream.Write(buffer,0,buffer.Length);
             }
-            body = memoryStream.ToString();
+            compressedBody = memoryStream.ToArray();
+            body = Encoding.UTF8.GetString(compressedBody);
         }
         response.Append("Content-Encoding: gzip\r\n");
     }
