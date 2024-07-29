@@ -124,13 +124,16 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
             compressedBody = memoryStream.ToArray();
             body = Encoding.UTF8.GetString(compressedBody);
         }
-        response.Append("Content-Encoding: gzip\r\n");
+        var compressionResponse = Encoding.UTF8.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Encoding: gzip\r\nContent-Type: {headerContentType}\r\nContent-Length: {compressedBody.Length}\r\n\r\n");
+        socket.Send(compressionResponse);
+        socket.Send(compressedBody);
+        socket.Close();
     }
-
-    response.Append($"Content-Type: {headerContentType}\r\n");
-    response.Append($"Content-Length: {body.Length}\r\n");
-    response.Append($"\r\n{body}");
-
-    socket.Send(Encoding.ASCII.GetBytes(response.ToString()));
-    socket.Close();
+    else{
+        response.Append($"Content-Type: {headerContentType}\r\n");
+        response.Append($"Content-Length: {body.Length}\r\n");
+        response.Append($"\r\n{body}");
+        socket.Send(Encoding.UTF8.GetBytes(response.ToString()));
+        socket.Close();
+    }
 }
