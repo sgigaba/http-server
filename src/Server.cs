@@ -1,3 +1,5 @@
+using System.Buffers;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Sockets;
 using System.Numerics;
@@ -111,6 +113,13 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
 
     if (encoding != null && encoding.Contains("gzip"))
     {
+        byte[] buffer = Encoding.ASCII.GetBytes(body);
+        using (var memoryStream = new MemoryStream()){
+            using (var gzipStream = new GZipStream(memoryStream, CompressionLevel.Optimal)){
+                gzipStream.Write(buffer,0,buffer.Length);
+            }
+            body = memoryStream.ToString();
+        }
         response.Append("Content-Encoding: gzip\r\n");
     }
 
