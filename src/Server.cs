@@ -5,12 +5,8 @@ using System.Net.Sockets;
 using System.Numerics;
 using System.Text;
 
-// You can use print statements as follows for debugging, they'll be visible when running tests.
-Console.WriteLine("Logs from your program will appear here!");
-
-// Uncomment this block to pass the first stage
- TcpListener server = new TcpListener(IPAddress.Any, 4221);
- server.Start();
+TcpListener server = new TcpListener(IPAddress.Any, 4221);
+server.Start();
 
 while (true)
 {
@@ -18,14 +14,14 @@ while (true)
     Task.Run(() => ParseRequestAndSendResponse(socket));
 }
 
+
+
 Task ParseRequestAndSendResponse(Socket socket)
 {
     byte[] responseBytes = new byte[256];
     socket.Receive(responseBytes);
 
     string response = Encoding.ASCII.GetString(responseBytes);
-
-    Console.WriteLine(response);
 
     string[] responseLines = response.Split('\n');
     string requestLine = responseLines.FirstOrDefault(_ => _.Contains("HTTP"));
@@ -130,10 +126,7 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
         socket.Close();
     }
     else{
-        response.Append($"Content-Type: {headerContentType}\r\n");
-        response.Append($"Content-Length: {body.Length}\r\n");
-        response.Append($"\r\n{body}");
-        socket.Send(Encoding.UTF8.GetBytes(response.ToString()));
+        socket.Send(Encoding.UTF8.GetBytes($"Content-Type: {headerContentType}\r\nContent-Length: {body.Length}\r\nContent-Length: {body.Length}\r\n\r\n{body}"));
         socket.Close();
     }
 }
