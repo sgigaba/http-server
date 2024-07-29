@@ -103,11 +103,8 @@ Task ParseRequestAndSendResponse(Socket socket)
 
 void SendResponse(string statusLine,string? headerContentType, string? body, Socket socket, string? encoding)
 {
-    var response = new StringBuilder();
     var bytesBody = Encoding.UTF8.GetBytes(body);
     byte[] compressedBody = null;
-
-    response.Append($"HTTP/1.1 {statusLine}\r\n");
 
     if (encoding != null && encoding.Contains("gzip"))
     {
@@ -126,7 +123,7 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
         socket.Close();
     }
     else{
-        socket.Send(Encoding.UTF8.GetBytes($"Content-Type: {headerContentType}\r\nContent-Length: {body.Length}\r\nContent-Length: {body.Length}\r\n\r\n{body}"));
+        socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {body.Length}\r\nContent-Length: {body.Length}\r\n\r\n{body}"));
         socket.Close();
     }
 }
