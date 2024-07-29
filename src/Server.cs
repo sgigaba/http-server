@@ -108,33 +108,36 @@ Task ParseRequestAndSendResponse(Socket socket)
 void SendResponse(string statusLine,string? headerContentType, string? body, Socket socket, string? encoding)
 {
     var response = new StringBuilder();
-    byte[] compressedBody = null;
+    Byte[] compressedBody = null;
 
     response.Append($"HTTP/1.1 {statusLine}\r\n");
 
-
     if (encoding != null && encoding.Contains("gzip"))
     {
-        byte[] buffer = Encoding.ASCII.GetBytes(body);
-        using (var memoryStream = new MemoryStream()){
-            using (var gzipStream = new GZipStream(memoryStream, CompressionLevel.Optimal)){
-                gzipStream.Write(buffer,0,buffer.Length);
+        var compressedMemoryStream = new MemoryStream();
+        using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(body)))
+        {
+            using (var gzipStream = new GZipStream(compressedMemoryStream, CompressionMode.Compress))
+            {
+                memoryStream.CopyTo(gzipStream);
             }
-            compressedBody = memoryStream.ToArray();
-            body = Encoding.UTF8.GetString(compressedBody);
         }
+        compressedBody = compressedMemoryStream.ToArray();
+        
         response.Append("Content-Encoding: gzip\r\n");
     }
 
     response.Append($"Content-Type: {headerContentType}\r\n");
-    response.Append($"Content-Length: {body?.Length}\r\n");
     if (compressedBody != null)
     {
+        response.Append($"Content-Length: {compressedBody.Length}\r\n");
         response.Append($"\r\n{compressedBody}");
     }
     else{
+        response.Append($"Content-Length: {body.Length}\r\n");
         response.Append($"\r\n{body}");
     }
+
 
     socket.Send(Encoding.ASCII.GetBytes(response.ToString()));
     socket.Close();
