@@ -128,7 +128,13 @@ void SendResponse(string statusLine,string? headerContentType, string? body, Soc
 
     response.Append($"Content-Type: {headerContentType}\r\n");
     response.Append($"Content-Length: {body?.Length}\r\n");
-    response.Append($"\r\n{body}");
+    if (compressedBody != null)
+    {
+        response.Append($"\r\n{compressedBody}");
+    }
+    else{
+        response.Append($"\r\n{body}");
+    }
 
     socket.Send(Encoding.ASCII.GetBytes(response.ToString()));
     socket.Close();
