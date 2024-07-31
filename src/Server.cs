@@ -72,7 +72,7 @@ void FileEndpoint(Socket socket, string[] requestLines, string[] endpoint)
         case "GET":
             if (File.Exists(arg[2] + endpoint[2])){
                 var body = File.ReadAllText(arg[2] + endpoint[2]);
-                socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 200 Ok\r\nContent-Type: application/octet-stream\r\nContent-Length: {body.Length}\r\n\r\n{body}"));
+                socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {body.Length}\r\n\r\n{body}"));
                 socket.Close();
             }
             else{
