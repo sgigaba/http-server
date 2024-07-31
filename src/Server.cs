@@ -113,7 +113,7 @@ void UserAgentEndpoint(Socket socket, string[] requestLines)
     {
         userAgent = headerLine.Split(':')[1];
     }
-    socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 200 Ok\r\nContent-Type: text/plain\r\nContent-Length: {userAgent.Trim().Length}\r\n\r\n{userAgent.Trim()}"));
+    socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {userAgent.Trim().Length}\r\n\r\n{userAgent.Trim()}"));
     socket.Close();
 }
 
