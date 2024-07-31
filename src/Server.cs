@@ -56,10 +56,24 @@ void EchoEndpoint(Socket socket, string[] requestLines, string[] endpoint)
 {
   try{
         var encoding = requestLines.FirstOrDefault(_ => _.Contains("Accept-Encoding"));
-        SendResponse("200 OK","text/plain",endpoint[2], socket, encoding);
+        if (encoding != null && encoding.Contains("gzip"))
+        {
+            var compressedBody = CompressBody(endpoint[2]);
+            var compressionResponse = 
+                Encoding.UTF8.GetBytes($"HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: {compressedBody.Length}\r\n\r\n");
+
+            socket.Send(compressionResponse);
+            socket.Send(compressedBody);
+            socket.Close();
+        }
+        else{
+            socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {endpoint[2].Length}\r\n\r\n{endpoint[2]}"));
+            socket.Close();
+        }
     }
     catch(IndexOutOfRangeException){
-        SendResponse("200 OK","text/plain","", socket, null);
+        socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n"));
+        socket.Close();
     }   
 }
 
@@ -117,30 +131,18 @@ void UserAgentEndpoint(Socket socket, string[] requestLines)
     socket.Close();
 }
 
-void SendResponse(string statusLine,string? headerContentType, string? body, Socket socket, string? encoding)
+byte[] CompressBody(string body)
 {
     var bytesBody = Encoding.UTF8.GetBytes(body);
     byte[] compressedBody = null;
 
-    if (encoding != null && encoding.Contains("gzip"))
+    using (var memoryStream = new MemoryStream())
     {
-        using (var memoryStream = new MemoryStream())
-        {
-            using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress)){
-                gzipStream.Write(bytesBody, 0,bytesBody.Length);
-            }
-
-            compressedBody = memoryStream.ToArray();
-            body = Encoding.UTF8.GetString(compressedBody);
+        using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress)){
+            gzipStream.Write(bytesBody, 0,bytesBody.Length);
         }
-        var compressionResponse = Encoding.UTF8.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Encoding: gzip\r\nContent-Type: {headerContentType}\r\nContent-Length: {compressedBody.Length}\r\n\r\n");
-        socket.Send(compressionResponse);
-        socket.Send(compressedBody);
-        socket.Close();
+        compressedBody = memoryStream.ToArray();
     }
-    else{
-        socket.Send(Encoding.UTF8.GetBytes($"HTTP/1.1 {statusLine}\r\nContent-Type: {headerContentType}\r\nContent-Length: {body.Length}\r\nContent-Length: {body.Length}\r\n\r\n{body}"));
-        socket.Close();
-    }
-}
 
+    return compressedBody;
+}
