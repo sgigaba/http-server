@@ -7,32 +7,60 @@ This is a starting point for C# solutions to the
 protocol that powers the web. In this challenge, you'll build a HTTP/1.1 server
 that is capable of serving multiple clients.
 
-Along the way you'll learn about TCP servers,
-[HTTP request syntax](https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html),
-and more.
-
 **Note**: If you're viewing this repo on GitHub, head over to
 [codecrafters.io](https://codecrafters.io) to try the challenge.
 
-# Passing the first stage
+# Running this program
 
-The entry point for your HTTP server implementation is in `src/Server.cs`. Study
-and uncomment the relevant code, and push your changes to pass the first stage:
+For this challenge, 4 endpoints are implemented that you can test using curl
 
-```sh
-git add .
-git commit -m "pass 1st stage" # any msg
-git push origin master
-```
+1. Default Endpoint : http://localhost:4221/
+Should Return:
 
-Time to move on to the next stage!
+HTTP/1.1 200 OK
+Content-Type: text/plain
 
-# Stage 2 & beyond
+2. Echo Endpoint: http://localhost:4221/echo/{text}
 
-Note: This section is for stages 2 and beyond.
+Should return text in body of result and provide Content Length of body.
 
-1. Ensure you have `dotnet (8.0)` installed locally
-1. Run `./your_server.sh` to run your program, which is implemented in
-   `src/Server.cs`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Length: 3
+
+{text}
+
+3. User Agent: http://localhost:4221/user-agent -H "User-Agent: grape/apple-mango"
+
+Should read the user agent request header and return it in response body:
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Length: 17
+
+grape/apple-mango
+
+4. Get Files: http://localhost:4221/files/{file name}
+
+When the program is run with a --directory flag which specifies where the should be stored i.e
+
+dotnet run --directory .\tmp\
+
+If file exists:
+
+HTTP/1.1 200 OK
+Content-Type: application/octet-stream
+Content-Length: 17
+
+{text in file}
+
+If file does not exist:
+
+HTTP/1.1 404 Not Found
+
+ 
+
+
+
+
+
