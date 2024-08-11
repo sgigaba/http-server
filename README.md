@@ -20,21 +20,21 @@ dotnet run
 
 # Available endpoints that can be tested using curl:
 
-**1. Default Endpoint : http://localhost:4221/ Should Return:**
+**1. Default Endpoint : curl -v http://localhost:4221/ Should Return:**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 200 OK Content-Type: text/plain
 
-**2. Echo Endpoint: http://localhost:4221/echo/{text} Should Return:**
+**2. Echo Endpoint: curl -v http://localhost:4221/echo/{text} Should Return:**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Type: text/plain Content-Length: 3
 {text}
 
-**3. User Agent: http://localhost:4221/user-agent -H "User-Agent: {text} Should Return:**
+**3. User Agent: curl -v http://localhost:4221/user-agent -H "User-Agent: {text} Should Return:**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Type: text/plain Content-Length: 17
 {text}
 
-**4. GET Files: http://localhost:4221/files/{file name}**
+**4. GET Files: curl -v http://localhost:4221/files/{filename}**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the file should be stored i.e
 
