@@ -53,12 +53,13 @@ dotnet run --directory .\tmp\
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the should be stored i.e<br/>
 ``` 
-dotnet run --directory .\tmp\ (directory provided)
+dotnet run --directory .\tmp\ 
 ```
+** A directory has been provided **
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file does not exist:**
 
 *  File should be created in specified directory.<br/>
-*  Data provided in request should be written to file and server should return:
+*  Data provided in request should be written to file and server should return:<br/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 201 Created 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file exists:**<br/>
