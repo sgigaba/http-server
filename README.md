@@ -33,7 +33,7 @@ run **dotnet run** to start server
 
 **4. GET Files: http://localhost:4221/files/{file name}**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the should be stored i.e
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the file should be stored i.e
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dotnet run --directory .\tmp\ (directory provided)
 
