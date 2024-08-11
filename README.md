@@ -12,11 +12,12 @@ that is capable of serving multiple clients.
 
 # Running this program
 
-dotnet 8 needs to be available locally. <br/>
-To run:
+[dotnet 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) needs to be available locally. <br/>
+**To run:**
 ```
 dotnet run
 ```
+
 # Available endpoints that can be tested using curl:
 
 **1. Default Endpoint : http://localhost:4221/ Should Return:**
@@ -37,8 +38,7 @@ dotnet run
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the file should be stored i.e
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-```
+``` 
 dotnet run --directory .\tmp\
 ```
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**If file exists:**
@@ -52,9 +52,9 @@ dotnet run --directory .\tmp\
 **5. POST Files: curl -v --data "12345" -H "Content-Type: application/octet-stream" http://localhost:4221/files/file_123**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the should be stored i.e<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-```dotnet run --directory .\tmp\ (directory provided)```
-
+``` 
+dotnet run --directory .\tmp\ (directory provided)
+```
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file does not exist:**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. File should be created in specified directory.<br/>
