@@ -57,13 +57,10 @@ dotnet run --directory .\tmp\ (directory provided)
 ```
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file does not exist:**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 *  File should be created in specified directory.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 *  Data provided in request should be written to file.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file exists:**<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 * Overwrite existing file with data provided in request and return:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 201 Created 
