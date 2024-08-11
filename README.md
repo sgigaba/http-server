@@ -12,25 +12,19 @@ that is capable of serving multiple clients.
 
 # Running this program
 
-dotnet 8 needs to be available locally.
+dotnet 8 needs to be available locally. <br/>
 run **dotnet run** to start server
 
 # Available endpoints that can be tested using curl:
 
-1. Default Endpoint : **http://localhost:4221/**
-Should Return:
+**1. Default Endpoint : http://localhost:4221/
+Should Return:**
 
-**HTTP/1.1 200 OK
-Content-Type: text/plain**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 200 OK Content-Type: text/plain
 
-2. Echo Endpoint: http://localhost:4221/echo/{text}
+**2. Echo Endpoint: http://localhost:4221/echo/{text} Should Return**
 
-Should return text in body of result and provide Content Length of body.
-
-HTTP/1.1 200 OK
-Content-Type: text/plain
-Content-Length: 3
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Type: text/plain Content-Length: 3
 {text}
 
 3. User Agent: http://localhost:4221/user-agent -H "User-Agent: grape/apple-mango"
