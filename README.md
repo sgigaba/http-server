@@ -52,11 +52,25 @@ run **dotnet run** to start server
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file does not exist:**
 
-a. File should be created in specified directory.
-b. Data provided in request should be written to file.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. File should be created in specified directory.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Data provided in request should be written to file.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file exists:**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Overwrite existing file with data provided in request and return:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 201 Created 
 
+**6. Allow Compression on echo endpoint: curl -v -H "Accept-Encoding: gzip" http://localhost:4221/echo/abc**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gzip is the only compression format allowed.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Should return:
+
+HTTP/1.1 200 OK
+Content-Encoding: gzip
+Content-Type: text/plain
+Content-Length: 23
+
+{Body might return an error}
 
 
 
