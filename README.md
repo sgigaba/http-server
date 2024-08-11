@@ -12,8 +12,8 @@ that is capable of serving multiple clients.
 
 # Running this program
 
-[dotnet 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) needs to be available locally. <br/>
-**To run:**
+[dotnet 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) needs to be installed. <br/>
+**To run solution:**
 ```
 dotnet run
 ```
@@ -57,11 +57,11 @@ dotnet run --directory .\tmp\ (directory provided)
 ```
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file does not exist:**
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. File should be created in specified directory.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Data provided in request should be written to file.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *  File should be created in specified directory.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *  Data provided in request should be written to file.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file exists:**<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Overwrite existing file with data provided in request and return:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Overwrite existing file with data provided in request and return:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 201 Created 
 
@@ -70,10 +70,7 @@ dotnet run --directory .\tmp\ (directory provided)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gzip is the only compression format allowed.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Should return:
 
-HTTP/1.1 200 OK
-Content-Encoding: gzip
-Content-Type: text/plain
-Content-Length: 23
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Encoding: gzip Content-Type: text/plain Content-Length: 23
 
 {Body ommitted}
 
