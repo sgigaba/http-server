@@ -43,6 +43,7 @@ Task ClientHandler(Socket socket)
             NotFound(socket);
             break;
     }
+    Console.WriteLine("Response Sent");
     return Task.CompletedTask;
 }
 
@@ -79,6 +80,16 @@ void EchoEndpoint(Socket socket, string[] requestLines, string[] endpoint)
 void FileEndpoint(Socket socket, string[] requestLines, string[] endpoint)
 {
     string[] arg = Environment.GetCommandLineArgs();
+    if (arg.Length != 3)
+    {
+        Console.WriteLine("Directory needs to be povided using --directory flag");
+        Environment.Exit(0); 
+    }
+    else if(!arg[1].Equals("--directory"))
+    {
+        Console.WriteLine("Directory needs to be povided using --directory flag");
+        Environment.Exit(0);    
+    }
     string requestMethod = requestLines.First(_ => _.Contains("HTTP")).Split(' ')[0]; 
     switch(requestMethod)
     {
