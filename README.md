@@ -21,7 +21,7 @@ run **dotnet run** to start server
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 200 OK Content-Type: text/plain
 
-**2. Echo Endpoint: http://localhost:4221/echo/{text} Should Return: **
+**2. Echo Endpoint: http://localhost:4221/echo/{text} Should Return:**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Type: text/plain Content-Length: 3
 {text}
@@ -45,7 +45,19 @@ run **dotnet run** to start server
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 404 Not Found
 
- 
+**5. POST Files: curl -v --data "12345" -H "Content-Type: application/octet-stream" http://localhost:4221/files/file_123**
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the should be stored i.e
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dotnet run --directory .\tmp\ (directory provided)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file does not exist:**
+
+a. File should be created in specified directory.
+b. Data provided in request should be written to file.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 201 Created 
+
+
 
 
 
