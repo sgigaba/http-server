@@ -12,13 +12,16 @@ that is capable of serving multiple clients.
 
 # Running this program
 
-For this challenge, 4 endpoints are implemented that you can test using curl
+dotnet 8 needs to be available locally.
+run **dotnet run** to start server
 
-1. Default Endpoint : http://localhost:4221/
+# Available endpoints that can be tested using curl:
+
+1. Default Endpoint : **http://localhost:4221/**
 Should Return:
 
-HTTP/1.1 200 OK
-Content-Type: text/plain
+**HTTP/1.1 200 OK
+Content-Type: text/plain**
 
 2. Echo Endpoint: http://localhost:4221/echo/{text}
 
