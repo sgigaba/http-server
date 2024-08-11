@@ -17,43 +17,33 @@ run **dotnet run** to start server
 
 # Available endpoints that can be tested using curl:
 
-**1. Default Endpoint : http://localhost:4221/
-Should Return:**
+**1. Default Endpoint : http://localhost:4221/ Should Return:**
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 200 OK Content-Type: text/plain
 
-**2. Echo Endpoint: http://localhost:4221/echo/{text} Should Return**
+**2. Echo Endpoint: http://localhost:4221/echo/{text} Should Return: **
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Type: text/plain Content-Length: 3
 {text}
 
-3. User Agent: http://localhost:4221/user-agent -H "User-Agent: grape/apple-mango"
+**3. User Agent: http://localhost:4221/user-agent -H "User-Agent: {text} Should Return:**
 
-Should read the user agent request header and return it in response body:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Type: text/plain Content-Length: 17
+{text}
 
-HTTP/1.1 200 OK
-Content-Type: text/plain
-Content-Length: 17
+**4. GET Files: http://localhost:4221/files/{file name}**
 
-grape/apple-mango
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When the program is run with a --directory flag which specifies where the should be stored i.e
 
-4. Get Files: http://localhost:4221/files/{file name}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dotnet run --directory .\tmp\ (directory provided)
 
-When the program is run with a --directory flag which specifies where the should be stored i.e
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**If file exists:**
 
-dotnet run --directory .\tmp\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 200 OK Content-Type: application/octet-stream Content-Length: 17 {text in file}
 
-If file exists:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**If file does not exist:**
 
-HTTP/1.1 200 OK
-Content-Type: application/octet-stream
-Content-Length: 17
-
-{text in file}
-
-If file does not exist:
-
-HTTP/1.1 404 Not Found
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HTTP/1.1 404 Not Found
 
  
 
