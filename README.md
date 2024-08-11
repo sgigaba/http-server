@@ -55,12 +55,12 @@ dotnet run --directory .\tmp\
 ``` 
 dotnet run --directory .\tmp\ 
 ```
-** A directory has been provided **
+**A directory has been provided** <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file does not exist:**
 
 *  File should be created in specified directory.<br/>
 *  Data provided in request should be written to file and server should return:<br/>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 201 Created 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP/1.1 201 Created 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **If file exists:**<br/>
 * Overwrite existing file with data provided in request and server should return:
