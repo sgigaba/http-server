@@ -5,6 +5,7 @@ using System.Text;
 
 TcpListener server = new TcpListener(IPAddress.Any, 4221);
 server.Start();
+Console.WriteLine("Server listening for client connection");
 
 while (true)
 {
@@ -16,6 +17,7 @@ Task ClientHandler(Socket socket)
 {
     byte[] clientBuffer = new byte[256];
     socket.Receive(clientBuffer);
+    Console.WriteLine("Client connected");
 
     string clientRequest = Encoding.ASCII.GetString(clientBuffer);
 
